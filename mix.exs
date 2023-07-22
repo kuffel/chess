@@ -27,7 +27,8 @@ defmodule Chess.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.19", only: :dev}
+      {:ex_doc, "~> 0.19", only: :dev},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
