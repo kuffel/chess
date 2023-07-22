@@ -1,5 +1,6 @@
 defmodule Chess.Utils do
   @moduledoc """
+  Defines a macro with utils functions.
   """
 
   alias Chess.{Figure}

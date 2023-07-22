@@ -1,5 +1,5 @@
 defmodule Chess.Move.RouteDistance do
-  @doc false
+  @moduledoc false
   defmacro __using__(_opts) do
     quote do
       defp do_calc_route_and_distance(move) do
