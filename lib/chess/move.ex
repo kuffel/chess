@@ -15,7 +15,18 @@ defmodule Chess.Move do
             promotion: ""
 
   alias Chess.{Game, Move, Position, Figure, Utils}
-  use Move.{Parse, FindFigure, RouteDistance, FigureRoute, Barriers, CheckCastling, Destination, EndMove}
+
+  use Move.{
+    Parse,
+    FindFigure,
+    RouteDistance,
+    FigureRoute,
+    Barriers,
+    CheckCastling,
+    Destination,
+    EndMove
+  }
+
   use Utils
 
   @doc """
@@ -31,7 +42,8 @@ defmodule Chess.Move do
 
   """
 
-  def new(%Game{} = game, value, promotion \\ "q") when is_binary(value) and promotion in ["r", "n", "b", "q"] do
+  def new(%Game{} = game, value, promotion \\ "q")
+      when is_binary(value) and promotion in ["r", "n", "b", "q"] do
     current_position = Position.new(game.current_fen)
 
     case do_parse_move(game, value, current_position.active) do
@@ -75,7 +87,12 @@ defmodule Chess.Move do
   end
 
   defp check_route_for_figure(move, game, current_position) do
-    case do_check_figure_route(move.figure, move.route, coordinates(move.from), current_position.castling) do
+    case do_check_figure_route(
+           move.figure,
+           move.route,
+           coordinates(move.from),
+           current_position.castling
+         ) do
       # render error message
       {:error, message} -> {:error, message}
       # continue
@@ -86,8 +103,8 @@ defmodule Chess.Move do
   # check barriers on the figure's route
   # except knight's move and moves to distance in 1 square
   defp check_barriers_on_route(move, game, current_position, %Figure{type: type}, distance)
-    when type == "n" or distance == 1,
-    do: check_destination(move, game, current_position)
+       when type == "n" or distance == 1,
+       do: check_destination(move, game, current_position)
 
   # check castling
   defp check_barriers_on_route(move, game, current_position, %Figure{type: "k"}, _) do
@@ -130,7 +147,13 @@ defmodule Chess.Move do
 
   # check destanation point
   defp check_destination(move, game, current_position) do
-    after_move_status = do_check_destination(game.squares, move, game.squares[:"#{move.to}"], current_position.en_passant)
+    after_move_status =
+      do_check_destination(
+        game.squares,
+        move,
+        game.squares[:"#{move.to}"],
+        current_position.en_passant
+      )
 
     case after_move_status do
       # render error message
@@ -150,14 +173,13 @@ defmodule Chess.Move do
       # valid move
       {:ok, [status, check]} ->
         {:ok,
-          %Game{
-            squares: move.squares,
-            current_fen: Position.new(move, current_position) |> Position.to_fen(),
-            history: [%{fen: game.current_fen, move: move.value} | game.history],
-            status: status,
-            check: check
-          }
-        }
+         %Game{
+           squares: move.squares,
+           current_fen: Position.new(move, current_position) |> Position.to_fen(),
+           history: [%{fen: game.current_fen, move: move.value} | game.history],
+           status: status,
+           check: check
+         }}
 
       # invalid moves for check status
       result ->

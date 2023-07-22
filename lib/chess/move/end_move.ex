@@ -18,7 +18,11 @@ defmodule Chess.Move.EndMove do
         {
           king_square,
           _
-        } = Enum.find(move.squares, fn {_, %Figure{color: color, type: type}} -> type == "k" && color == current_position.active end)
+        } =
+          Enum.find(move.squares, fn {_, %Figure{color: color, type: type}} ->
+            type == "k" && color == current_position.active
+          end)
+
         active_figures = define_active_figures(move.squares, opponent(current_position.active))
         attackers = define_attackers(active_figures, king_square)
 
@@ -32,48 +36,127 @@ defmodule Chess.Move.EndMove do
         {
           opponent_king_square,
           opponent_king
-        } = Enum.find(move.squares, fn {_, %Figure{color: color, type: type}} -> type == "k" && color != current_position.active end)
+        } =
+          Enum.find(move.squares, fn {_, %Figure{color: color, type: type}} ->
+            type == "k" && color != current_position.active
+          end)
+
         active_figures = define_active_figures(move.squares, current_position.active)
         attackers = define_attackers(active_figures, opponent_king_square)
 
         case length(attackers) do
-          0 -> {:ok, [:playing, nil]}
-          1 -> check_for_one_attacker(move, game, current_position, opponent_king_square, opponent_king, active_figures, attackers)
-          _ -> check_for_many_attackers(opponent_king_square, opponent_king, active_figures, move.squares, current_position)
+          0 ->
+            {:ok, [:playing, nil]}
+
+          1 ->
+            check_for_one_attacker(
+              move,
+              game,
+              current_position,
+              opponent_king_square,
+              opponent_king,
+              active_figures,
+              attackers
+            )
+
+          _ ->
+            check_for_many_attackers(
+              opponent_king_square,
+              opponent_king,
+              active_figures,
+              move.squares,
+              current_position
+            )
         end
       end
 
-      defp check_for_one_attacker(move, game, current_position, opponent_king_square, opponent_king, active_figures, attackers) do
+      defp check_for_one_attacker(
+             move,
+             game,
+             current_position,
+             opponent_king_square,
+             opponent_king,
+             active_figures,
+             attackers
+           ) do
         {{attacker_square, _}, _} = Enum.at(attackers, 0)
 
-        case king_escape_is_possible?(opponent_king_square, opponent_king, active_figures, move.squares, current_position) do
+        case king_escape_is_possible?(
+               opponent_king_square,
+               opponent_king,
+               active_figures,
+               move.squares,
+               current_position
+             ) do
           # if king can avoid check by self
-          true -> {:ok, [:check, current_position.active]}
+          true ->
+            {:ok, [:check, current_position.active]}
+
           # try to avoid by using another figures
-          false -> can_destroy_attacker?(move, game, current_position, opponent_king_square, attacker_square)
+          false ->
+            can_destroy_attacker?(
+              move,
+              game,
+              current_position,
+              opponent_king_square,
+              attacker_square
+            )
         end
       end
 
-      defp check_for_many_attackers(opponent_king_square, opponent_king, active_figures, squares, current_position) do
-        case king_escape_is_possible?(opponent_king_square, opponent_king, active_figures, squares, current_position) do
+      defp check_for_many_attackers(
+             opponent_king_square,
+             opponent_king,
+             active_figures,
+             squares,
+             current_position
+           ) do
+        case king_escape_is_possible?(
+               opponent_king_square,
+               opponent_king,
+               active_figures,
+               squares,
+               current_position
+             ) do
           true -> {:ok, [:playing, nil]}
           false -> {:ok, [:completed, current_position.active]}
         end
       end
 
       # try to destroy attacker
-      defp can_destroy_attacker?(move, game, current_position, opponent_king_square, attacker_square) do
+      defp can_destroy_attacker?(
+             move,
+             game,
+             current_position,
+             opponent_king_square,
+             attacker_square
+           ) do
         # check if some figure can destroy attacker
         case check_attackers(move, game, current_position, attacker_square) do
           # if yes -> continue
-          true -> {:ok, [:check, current_position.active]}
+          true ->
+            {:ok, [:check, current_position.active]}
+
           # if no -> find blockers
-          false -> can_block_attackers?(move, game, current_position, opponent_king_square, attacker_square)
+          false ->
+            can_block_attackers?(
+              move,
+              game,
+              current_position,
+              opponent_king_square,
+              attacker_square
+            )
         end
       end
 
       # try to block attacker route
-      defp can_block_attackers?(move, game, current_position, opponent_king_square, attacker_square) do
+      defp can_block_attackers?(
+             move,
+             game,
+             current_position,
+             opponent_king_square,
+             attacker_square
+           ) do
         route = calc_route(Atom.to_string(attacker_square), Atom.to_string(opponent_king_square))
         distance = calc_distance(route)
         squares_for_block = define_squares_for_block(attacker_square, route, distance)
@@ -144,18 +227,45 @@ defmodule Chess.Move.EndMove do
         |> Enum.map(fn x -> String.to_atom(x) end)
       end
 
-      defp collect_squares_with_attack([move_from_x_index, move_from_y_index], [x_direction, y_direction], distance, step, acc) when distance > step do
+      defp collect_squares_with_attack(
+             [move_from_x_index, move_from_y_index],
+             [x_direction, y_direction],
+             distance,
+             step,
+             acc
+           )
+           when distance > step do
         move_to_x_index = Kernel.trunc(move_from_x_index + step * x_direction)
         move_to_y_index = Kernel.trunc(move_from_y_index + step * y_direction)
-        square = "#{Enum.at(Chess.x_fields, move_to_x_index)}#{Enum.at(Chess.y_fields, move_to_y_index)}"
+
+        square =
+          "#{Enum.at(Chess.x_fields(), move_to_x_index)}#{Enum.at(Chess.y_fields(), move_to_y_index)}"
+
         acc = [square | acc]
-        collect_squares_with_attack([move_from_x_index, move_from_y_index], [x_direction, y_direction], distance, step + 1, acc)
+
+        collect_squares_with_attack(
+          [move_from_x_index, move_from_y_index],
+          [x_direction, y_direction],
+          distance,
+          step + 1,
+          acc
+        )
       end
 
       defp collect_squares_with_attack(_, _, _, _, acc), do: acc
 
-      defp king_escape_is_possible?(opponent_king_square, opponent_king, active_figures, squares, current_position) do
-        attacked_squares = Enum.map(active_figures, fn {_, squares} -> squares end) |> List.flatten() |> Enum.uniq()
+      defp king_escape_is_possible?(
+             opponent_king_square,
+             opponent_king,
+             active_figures,
+             squares,
+             current_position
+           ) do
+        attacked_squares =
+          Enum.map(active_figures, fn {_, squares} -> squares end)
+          |> List.flatten()
+          |> Enum.uniq()
+
         possible_king_moves =
           check_attacked_squares(squares, {opponent_king_square, opponent_king}, "attack")
           |> List.flatten()

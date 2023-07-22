@@ -8,7 +8,7 @@ defmodule Chess.Game do
   use Utils
 
   defstruct squares: nil,
-            current_fen: Position.new |> Position.to_fen(),
+            current_fen: Position.new() |> Position.to_fen(),
             history: [],
             status: :playing,
             check: nil
@@ -67,6 +67,6 @@ defmodule Chess.Game do
 
   """
   def play(%Game{} = game, value, promotion \\ "q")
-    when is_binary(value) and promotion in ["r", "n", "b", "q"],
-    do: Move.new(game, value, promotion)
+      when is_binary(value) and promotion in ["r", "n", "b", "q"],
+      do: Move.new(game, value, promotion)
 end

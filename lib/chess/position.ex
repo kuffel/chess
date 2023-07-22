@@ -62,7 +62,7 @@ defmodule Chess.Position do
         {:error, "Position must contain 8 blocks for each line"}
 
       Enum.find(["w", "b"], fn x -> x == Enum.at(splitted_fen, 1) end) == nil ->
-        {:error, "Active side must be w or b" }
+        {:error, "Active side must be w or b"}
 
       true ->
         {:ok, splitted_fen}
@@ -79,7 +79,14 @@ defmodule Chess.Position do
 
   """
   def new(
-        %Move{to: to, squares: squares, figure: figure, distance: distance, is_attack: is_attack, is_castling: is_castling},
+        %Move{
+          to: to,
+          squares: squares,
+          figure: figure,
+          distance: distance,
+          is_attack: is_attack,
+          is_castling: is_castling
+        },
         %Position{active: active, castling: castling, half_move: half_move, full_move: full_move}
       ) do
     position = calc_position_from_squares(squares)
@@ -130,7 +137,8 @@ defmodule Chess.Position do
     if castling == "", do: "-", else: castling
   end
 
-  defp check_en_passant(%Figure{type: type}, distance, _) when type != "p" or distance != 2, do: "-"
+  defp check_en_passant(%Figure{type: type}, distance, _) when type != "p" or distance != 2,
+    do: "-"
 
   defp check_en_passant(%Figure{color: "w"}, _, move_to) do
     {y_point, _} = move_to |> String.last() |> Integer.parse()
@@ -151,9 +159,9 @@ defmodule Chess.Position do
   defp add_full_move(full_move, _), do: full_move
 
   defp calc_position_from_squares(squares) do
-    Chess.y_fields
+    Chess.y_fields()
     |> Enum.reverse()
-    |> Enum.map(fn y -> check_line(Chess.x_fields, squares, y, "", 0) end)
+    |> Enum.map(fn y -> check_line(Chess.x_fields(), squares, y, "", 0) end)
     |> Enum.join("/")
   end
 
@@ -178,10 +186,12 @@ defmodule Chess.Position do
       true ->
         check_line(tail, squares, y_line, acc <> result, 0)
     end
-  end  
+  end
 
   defp check_figure(nil), do: 1
 
-  defp check_figure(%Figure{color: "w", type: type}), do: String.first(type) |> String.capitalize()
+  defp check_figure(%Figure{color: "w", type: type}),
+    do: String.first(type) |> String.capitalize()
+
   defp check_figure(%Figure{color: "b", type: type}), do: String.first(type)
 end

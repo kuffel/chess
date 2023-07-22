@@ -20,7 +20,7 @@ defmodule Chess do
   @black_pions_moves [[0, -1], [0, -1]]
 
   alias Chess.Game
-  
+
   def new_game, do: Game.new()
   def new_game(current_fen), do: Game.new(current_fen)
 

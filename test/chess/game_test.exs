@@ -12,7 +12,8 @@ defmodule Chess.GameTest do
   end
 
   test "create game from FEN-notation" do
-    %Game{squares: squares, current_fen: current_fen, status: status, check: check} = Game.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+    %Game{squares: squares, current_fen: current_fen, status: status, check: check} =
+      Game.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
     assert length(squares) == 32
     assert current_fen == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"

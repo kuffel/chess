@@ -11,7 +11,10 @@ defmodule Chess.Game.CheckStatus do
         {
           king_square,
           _
-        } = Enum.find(squares, fn {_, %Figure{color: color, type: type}} -> type == "k" && color == active end)
+        } =
+          Enum.find(squares, fn {_, %Figure{color: color, type: type}} ->
+            type == "k" && color == active
+          end)
 
         squares
         |> define_active_figures(opponent(active))
@@ -27,7 +30,10 @@ defmodule Chess.Game.CheckStatus do
         {
           opponent_king_square,
           _
-        } = Enum.find(squares, fn {_, %Figure{color: color, type: type}} -> type == "k" && color != active end)
+        } =
+          Enum.find(squares, fn {_, %Figure{color: color, type: type}} ->
+            type == "k" && color != active
+          end)
 
         squares
         |> define_active_figures(active)

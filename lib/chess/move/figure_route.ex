@@ -24,7 +24,8 @@ defmodule Chess.Move.FigureRoute do
       end
 
       defp do_check_figure_route(%Figure{type: "q"}, route, _, _) do
-        unless diagonal_move?(route) || linear_move?(route), do: {:error, "Queen can not move like this"}
+        unless diagonal_move?(route) || linear_move?(route),
+          do: {:error, "Queen can not move like this"}
       end
 
       defp do_check_figure_route(%Figure{color: color, type: "k"}, route, _, castling) do
@@ -32,11 +33,15 @@ defmodule Chess.Move.FigureRoute do
       end
 
       defp pion_move?([x_route, y_route], move_from_y, "w") do
-        abs(x_route) == 1 && y_route == 1 || x_route == 0 && (y_route == 1 || y_route == 2 && move_from_y == start_line_for_pion("w"))
+        (abs(x_route) == 1 && y_route == 1) ||
+          (x_route == 0 &&
+             (y_route == 1 || (y_route == 2 && move_from_y == start_line_for_pion("w"))))
       end
 
       defp pion_move?([x_route, y_route], move_from_y, _) do
-        abs(x_route) == 1 && y_route == -1 || x_route == 0 && (y_route == -1 || y_route == -2 && move_from_y == start_line_for_pion("b"))
+        (abs(x_route) == 1 && y_route == -1) ||
+          (x_route == 0 &&
+             (y_route == -1 || (y_route == -2 && move_from_y == start_line_for_pion("b"))))
       end
 
       defp start_line_for_pion("w"), do: "2"
@@ -46,11 +51,15 @@ defmodule Chess.Move.FigureRoute do
 
       defp diagonal_move?([x_route, y_route]), do: abs(x_route) == abs(y_route)
 
-      defp knight_move?([x_route, y_route]), do: abs(x_route) == 2 && abs(y_route) == 1 || abs(x_route) == 1 && abs(y_route) == 2
+      defp knight_move?([x_route, y_route]),
+        do: (abs(x_route) == 2 && abs(y_route) == 1) || (abs(x_route) == 1 && abs(y_route) == 2)
 
       defp king_move?([x_route, y_route], castling, color) do
         possible = [-1, 0, 1]
-        x_route in possible && y_route in possible || x_route in [-2, 2] && y_route == 0 && String.contains?(castling, possible_castling(x_route, color))
+
+        (x_route in possible && y_route in possible) ||
+          (x_route in [-2, 2] && y_route == 0 &&
+             String.contains?(castling, possible_castling(x_route, color)))
       end
 
       defp possible_castling(x_route, color) do

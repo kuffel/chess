@@ -17,8 +17,8 @@ defmodule Chess.Move.Barriers do
 
       defp calc_from_index([move_from_x, move_from_y]) do
         [
-          Enum.find_index(Chess.x_fields, fn x -> x == move_from_x end),
-          Enum.find_index(Chess.y_fields, fn x -> x == move_from_y end)
+          Enum.find_index(Chess.x_fields(), fn x -> x == move_from_x end),
+          Enum.find_index(Chess.y_fields(), fn x -> x == move_from_y end)
         ]
       end
 
@@ -31,14 +31,32 @@ defmodule Chess.Move.Barriers do
         end)
       end
 
-      defp check_squares_for_barrier(squares, [move_from_x_index, move_from_y_index], [x_direction, y_direction], distance, step) when distance > step do
+      defp check_squares_for_barrier(
+             squares,
+             [move_from_x_index, move_from_y_index],
+             [x_direction, y_direction],
+             distance,
+             step
+           )
+           when distance > step do
         move_to_x_index = Kernel.trunc(move_from_x_index + step * x_direction)
         move_to_y_index = Kernel.trunc(move_from_y_index + step * y_direction)
-        square = "#{Enum.at(Chess.x_fields, move_to_x_index)}#{Enum.at(Chess.y_fields, move_to_y_index)}"
+
+        square =
+          "#{Enum.at(Chess.x_fields(), move_to_x_index)}#{Enum.at(Chess.y_fields(), move_to_y_index)}"
 
         case squares[:"#{square}"] != nil do
-          true -> {:error, "There is barrier at square #{square}"}
-          false -> check_squares_for_barrier(squares, [move_from_x_index, move_from_y_index], [x_direction, y_direction], distance, step + 1)
+          true ->
+            {:error, "There is barrier at square #{square}"}
+
+          false ->
+            check_squares_for_barrier(
+              squares,
+              [move_from_x_index, move_from_y_index],
+              [x_direction, y_direction],
+              distance,
+              step + 1
+            )
         end
       end
 

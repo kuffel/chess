@@ -8,8 +8,8 @@ defmodule Chess.Move.Parse do
   defmacro __using__(_opts) do
     quote do
       defp do_parse_move(%Game{status: "check", check: check}, move, active)
-        when check != active and (move == "0-0" or move == "0-0-0"),
-        do: {:error, "Your king is under attack, castling is forbidden"}
+           when check != active and (move == "0-0" or move == "0-0-0"),
+           do: {:error, "Your king is under attack, castling is forbidden"}
 
       defp do_parse_move(_, move, active) when move == "0-0" or move == "0-0-0" do
         [
@@ -46,16 +46,16 @@ defmodule Chess.Move.Parse do
         splitted_move = coordinates(move)
 
         cond do
-          Enum.find(Chess.x_fields, fn x -> x == Enum.at(splitted_move, 0) end) == nil ->
+          Enum.find(Chess.x_fields(), fn x -> x == Enum.at(splitted_move, 0) end) == nil ->
             {:error, "There is no such square on the board"}
 
-          Enum.find(Chess.y_fields, fn x -> x == Enum.at(splitted_move, 1) end) == nil ->
+          Enum.find(Chess.y_fields(), fn x -> x == Enum.at(splitted_move, 1) end) == nil ->
             {:error, "There is no such square on the board"}
 
-          Enum.find(Chess.x_fields, fn x -> x == Enum.at(splitted_move, 3) end) == nil ->
+          Enum.find(Chess.x_fields(), fn x -> x == Enum.at(splitted_move, 3) end) == nil ->
             {:error, "There is no such square on the board"}
 
-          Enum.find(Chess.y_fields, fn x -> x == Enum.at(splitted_move, 4) end) == nil ->
+          Enum.find(Chess.y_fields(), fn x -> x == Enum.at(splitted_move, 4) end) == nil ->
             {:error, "There is no such square on the board"}
 
           true ->
