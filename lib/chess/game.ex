@@ -69,4 +69,45 @@ defmodule Chess.Game do
   def play(%Game{} = game, value, promotion \\ "q")
       when is_binary(value) and promotion in ["r", "n", "b", "q"],
       do: Move.new(game, value, promotion)
+
+  @doc """
+  Returns a string representation of the current board status
+  """
+  def to_string(%Game{
+        squares: square,
+        history: history,
+        current_fen: current_fen,
+        status: status
+      }) do
+    ranks =
+      Chess.y_fields()
+      |> Enum.reverse()
+      |> Enum.map(fn rank ->
+        files =
+          Chess.x_fields()
+          |> Enum.reduce("", fn file, acc ->
+            icon =
+              square
+              |> Keyword.get(String.to_atom("#{file}#{rank}"), :empty)
+              |> Chess.Figure.icon()
+
+            acc <> "| #{icon} "
+          end)
+
+        "| #{rank} #{files}| #{rank} | \n|---|---|---|---|---|---|---|---|---|---|\n"
+      end)
+
+    """
+
+    Move number: #{length(history)}
+    Turn: #{if rem(length(history), 2) == 0, do: "white", else: "black"}
+    Current FEN: #{current_fen}
+    Status: #{status}
+
+        | A | B | C | D | E | F | G | H |
+    |---|---|---|---|---|---|---|---|---|---|
+    #{ranks}    | A | B | C | D | E | F | G | H |
+
+    """
+  end
 end

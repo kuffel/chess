@@ -33,6 +33,10 @@ defmodule Chess.FigureTest do
     end
   end
 
+  test "icon/1 should return an empty string when figure is :empty" do
+    assert Figure.icon(:empty) == " "
+  end
+
   for {name, color, type, icon} <- figures do
     test "icon/1 should support #{name}" do
       assert Figure.icon(%Figure{color: unquote(color), type: unquote(type)}) == unquote(icon)

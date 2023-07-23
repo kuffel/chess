@@ -159,4 +159,9 @@ defmodule Chess.GameTest do
 
     assert %Game{status: :check, check: "b"} = game
   end
+
+  test "to_string/1 should support a new game", %{game: game} do
+    assert str = Game.to_string(game)
+    IO.puts(str)
+  end
 end

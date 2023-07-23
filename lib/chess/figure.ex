@@ -48,5 +48,5 @@ defmodule Chess.Figure do
   def icon(%__MODULE__{type: "b", color: "b"}), do: "\u265E"
   def icon(%__MODULE__{type: "n", color: "w"}), do: "\u2657"
   def icon(%__MODULE__{type: "n", color: "b"}), do: "\u265D"
-  # def icon(nil), do: " "
+  def icon(:empty), do: " "
 end
