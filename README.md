@@ -10,7 +10,7 @@ by adding `chess` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:chess, "~> 0.4.1"}
+    {:chess, "~> 0.5.0"}
   ]
 end
 ```
@@ -30,7 +30,7 @@ New game will be created with squares and figures, FEN-notation, and game's stat
 ## Make move
 
 ```elixir
-  Chess.play(%Chess.Game{}, "e2-e4")
+  Chess.Game.play(%Chess.Game{}, "e2-e4")
 ```
 
 After valid move game object will contain new figure's position and FEN-notation
@@ -40,7 +40,7 @@ After valid move game object will contain new figure's position and FEN-notation
 Add third option if pion achives last line, one from [q|n|r|b], default - q
 
 ```elixir
-  Chess.play(%Chess.Game{}, "e7-e8", "q")
+  Chess.Game.play(%Chess.Game{}, "e7-e8", "q")
 ```
 
 ### Castling
@@ -48,8 +48,8 @@ Add third option if pion achives last line, one from [q|n|r|b], default - q
 To make castling move:
 
 ```elixir
-  Chess.play(%Chess.Game{}, "0-0")
-  Chess.play(%Chess.Game{}, "0-0-0")
+  Chess.Game.play(%Chess.Game{}, "0-0")
+  Chess.Game.play(%Chess.Game{}, "0-0-0")
 ```
 
 ## TODO
