@@ -91,6 +91,7 @@ defmodule ChessTest do
     |> String.replace(~r/(\d)\./, "")
     |> String.split(" ")
     |> Enum.map(&parse_move_san/1)
+
     # |> Enum.chunk_every(2)
   end
 
@@ -100,7 +101,6 @@ defmodule ChessTest do
   # defp parse_move_san(<<figure_from, file_from, file_from, figure_to, file_to, file_to>>), do: {figure_from, file_from, file_from, figure_to, file_to, file_to}
 
   defp parse_move_san(i), do: i
-
 
   test "develop" do
     games =
