@@ -44,9 +44,9 @@ defmodule Chess.Figure do
   def icon(%__MODULE__{type: "k", color: "b"}), do: "\u265A"
   def icon(%__MODULE__{type: "q", color: "w"}), do: "\u2655"
   def icon(%__MODULE__{type: "q", color: "b"}), do: "\u265B"
-  def icon(%__MODULE__{type: "b", color: "w"}), do: "\u2658"
-  def icon(%__MODULE__{type: "b", color: "b"}), do: "\u265E"
-  def icon(%__MODULE__{type: "n", color: "w"}), do: "\u2657"
-  def icon(%__MODULE__{type: "n", color: "b"}), do: "\u265D"
+  def icon(%__MODULE__{type: "n", color: "w"}), do: "\u2658"
+  def icon(%__MODULE__{type: "n", color: "b"}), do: "\u265E"
+  def icon(%__MODULE__{type: "b", color: "w"}), do: "\u2657"
+  def icon(%__MODULE__{type: "b", color: "b"}), do: "\u265D"
   def icon(:empty), do: " "
 end

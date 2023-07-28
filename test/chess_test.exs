@@ -14,7 +14,7 @@ defmodule ChessTest do
       Path.extname(name) == ".pgn"
     end)
     |> Enum.uniq()
-    |> Enum.take_random(Keyword.get(opts, :count, 100))
+    |> Enum.take_random(Keyword.get(opts, :count, 10))
     |> Enum.map(fn item ->
       [name] = Floki.attribute(item, "href")
       # id = :sha |> :crypto.hash(name) |> Base.encode64()
@@ -63,7 +63,9 @@ defmodule ChessTest do
     |> Enum.map(&IO.inspect/1)
   end
 
-  defp parse_pgn_game([tags, moves]), do: {:ok, %{tags: parse_tags(tags), moves: moves}}
+  defp parse_pgn_game([tags, moves]),
+    do: {:ok, %{tags: parse_tags(tags), moves: parse_moves(moves)}}
+
   defp parse_pgn_game([""]), do: {:error, :invalid_game}
   defp parse_pgn_game([_]), do: {:error, :invalid_game}
 
@@ -81,6 +83,24 @@ defmodule ChessTest do
 
   defp parse_tag_key([key, value]), do: {:ok, {key, String.replace(value, "\"", "")}}
   defp parse_tag_key([_]), do: {:error, :invalid_tag}
+
+  defp parse_moves(moves_str) do
+    moves_str
+    |> String.replace("\r", "")
+    |> String.replace("\n", "")
+    |> String.replace(~r/(\d)\./, "")
+    |> String.split(" ")
+    |> Enum.map(&parse_move_san/1)
+    # |> Enum.chunk_every(2)
+  end
+
+  # defp parse_move_san(<<figure, "x", file, rank>>), do: {figure, file, rank}
+  # defp parse_move_san(<<figure, file, rank>>), do: {figure, file, rank}
+  # defp parse_move_san(<<file, rank>>), do: {"p", file, rank}
+  # defp parse_move_san(<<figure_from, file_from, file_from, figure_to, file_to, file_to>>), do: {figure_from, file_from, file_from, figure_to, file_to, file_to}
+
+  defp parse_move_san(i), do: i
+
 
   test "develop" do
     games =
