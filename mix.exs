@@ -8,8 +8,8 @@ defmodule Chess.MixProject do
   def project do
     [
       app: :chess,
-      version: "0.4.1",
-      elixir: "~> 1.7",
+      version: "0.5.0",
+      elixir: "~> 1.9",
       name: "Chess",
       description: @description,
       source_url: "https://github.com/kortirso/chess",
@@ -36,7 +36,9 @@ defmodule Chess.MixProject do
     [
       {:ex_doc, "~> 0.19", only: :dev},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:floki, "~> 0.34.3", only: [:dev, :test]},
+      {:httpoison, "~> 2.1", only: [:dev, :test]}
     ]
   end
 

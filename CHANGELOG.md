@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.5.0] - 2022-07-22
 ### Added
 - UTF-8 figure icons
+- Board and game status can be returned as string and printed to console.
 
 ### Modify
 - Updated locked deps
+- Minimal Elixir version is 1.9
 
 ## [0.4.1] - 2019-01-24
 ### Added
