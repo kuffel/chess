@@ -110,129 +110,80 @@ defmodule ChessTest do
        black: black
     }
   end
-  
-#  defp parse_move_san(san, number, color) do
-#    is_chess = String.contains?(san, "+")
-#    is_kill = String.contains?(san, "x")
+
+
+#  test "develop" do
+#    games =
+#      pgn_mentor_files()
+#      |> Enum.map(fn %{download_path: download_path} ->
+#        download_path
+#        |> File.read!()
+#        |> parse_pgn()
+#      end)
+#      |> List.flatten()
 #
-#    parts =
-#      san
-#      |> String.replace("+", "")
-#      |> String.codepoints()
-#
-#    %{
-#      is_chess: is_chess,
-#      is_kill: is_kill,
-#      san: san,
-#      codepoints: parts
-#    }
-#
-#    #    case String.codepoints(san) do
-#    #      ["0", "-", "0"] ->
-#    #        %{type: :castling_kingside}
-#    #
-#    #      ["0", "-", "0", "-", "0"] ->
-#    #        %{type: :castling_queenside}
-#    #
-#    #      [to_file, to_rank] ->
-#    #        %{type: :move, figure: "p", to_file: to_file, to_rank: to_rank}
-#    #
-#    #      [figure, to_file, to_rank] when figure in ["P", "R", "N", "B", "Q", "K"] ->
-#    #        %{type: :move, figure: String.downcase(figure), to_file: to_file, to_rank: to_rank}
-#    #
-#    #      [figure, from_file, to_file, to_rank] when figure in ["P", "R", "N", "B", "Q", "K"] and from_file in ["a", "b", "c", "d", "e", "f", "g", "h"] ->
-#    #        %{type: :move, figure: String.downcase(figure), from_file: from_file, to_file: to_file, to_rank: to_rank}
-#    #
-#    #      [figure, "x", to_file, to_rank] when figure in ["P", "R", "N", "B", "Q", "K"] ->
-#    #        %{type: :kill, figure: String.downcase(figure), to_file: to_file, to_rank: to_rank}
-#    #
-#    #
-#    #      _other ->
-#    #        san
-#    #    end
+#    IO.puts("Games: #{length(games)}")
 #  end
 
-  # defp parse_move("0-0"), do: :castling_kingside
-  # defp parse_move("0-0-0"), do: :castling_queenside
-  # defp parse_move_san(<<file, rank>>), do: {:move, "p", file, rank}
-  # defp parse_move_san(<<figure, file, rank>>), do: {:move, String.downcase(figure), file, rank}
-  # defp parse_move_san(i), do: i
-
-  #  defp parse_move_san(<<figure, file, rank>>), do: {figure, file, rank}
-  #  defp parse_move_san(<<file, rank>>), do: {"p", file, rank}
-  #  defp parse_move_san(<<file, "x", file, rank>>), do: {"p", file, rank}
-
-  test "develop" do
-    games =
-      pgn_mentor_files()
-      |> Enum.map(fn %{download_path: download_path} ->
-        download_path
-        |> File.read!()
-        |> parse_pgn()
-      end)
-      |> List.flatten()
-
-    IO.puts("Games: #{length(games)}")
-
-    #    game = Chess.new_game()
-    #    {:ok, game} = Chess.Game.play(game, "e2-e4")
-    #    Chess.Game.to_string(game) |> IO.puts()
-    #
-    #    {:ok, game} = Chess.Game.play(game, "e7-e5")
-    #    Chess.Game.to_string(game) |> IO.puts()
-    #
-    #    {:ok, game} = Chess.Game.play(game, "d1-h5")
-    #    Chess.Game.to_string(game) |> IO.puts()
-    #
-    #    {:error, "Invalid move format"} = Chess.Game.play(game, "e4")
-    #    {:error, "Square does not have figure for move"} = Chess.Game.play(game, "e2-e4")
-    #    {:error, "There is barrier at square " <> _square} = Chess.Game.play(game, "0-0")
+  test "develop - PGN SAN" do
   end
 
-#  test "play with pgn" do
-#    game = Chess.new_game()
-#    {:ok, game} = Chess.Game.play(game, "e2-e4")
-#
-#    Chess.Game.to_string(game) |> IO.puts()
-#    IO.inspect(game.history)
-#
-#  end
-#
-#  defmodule ChessUtils do
-#    defp parse_san_move(move) do
-#      {piece, target} =
-#        case String.split_at(move, -2) do
-#          {_, target} -> {"P", target}  # Assume it's a pawn move if piece is missing
-#          {piece, target} -> {String.upcase(piece), target}
-#          _ -> {nil, nil}
-#        end
-#
-#      {piece, target}
-#    end
-#
-#    defp get_starting_square("P", target) do
-#      String.slice(target, 0..0) <> "2"  # Assuming it's a white pawn
-#    end
-#    defp get_starting_square(piece, target) do
-#      String.upcase(piece) <> target
-#    end
-#
-#    def convert_to_long_algebraic(san_move) do
-#      {piece, target} = parse_san_move(san_move)
-#      starting_square = get_starting_square(piece, target)
-#      if starting_square != nil do
-#        starting_square <> "-" <> target
-#      else
-#        "Invalid SAN move"
-#      end
-#    end
-#  end
-#
-#
-#  test "something" do
-#    IO.puts ChessUtils.convert_to_long_algebraic("e4")  # Output: "e2-e4"
-#    IO.puts ChessUtils.convert_to_long_algebraic("e3")
-#  end
+  def parse_fen(fen) when is_binary(fen) do
+    with groups <- String.split(fen),
+         6 <- length(groups) do
+
+#      %{
+#        pieces: pieces,
+#        active_color: active_color,
+#        castling: castling,
+#        en_passant_target_square: en_passant_target_square,
+#        halfmoves: halfmoves,
+#        moves: moves
+#      }
+      {:ok, groups}
+    else
+      p when is_number(p) ->
+        {:error, :fen_groups_length}
+    end
+  end
+
+
+
+  test "develop - FEN" do
+
+
+    assert parse_fen("SOMETHING") == {:error, :fen_groups_length}
+    assert parse_fen("SOM ET HING") == {:error, :fen_groups_length}
+
+    assert {:ok, %{
+            pieces: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+            active_color: "w",
+            castling: "KQkq",
+            en_passant_target_square: "-",
+            halfmoves: "0",
+            fullmoves: "1"
+           }} = parse_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+
+
+
+
+
+    # FEN defines a game position in one line of text
+
+    # 1. Piece placement data
+    # 2. Active color
+    # 3. Castling availability
+    # 4. En passant target square
+
+#    Chess.Game.new("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+#    |> Chess.Game.to_string()
+#    |> IO.puts()
+  end
+
+
+
+
 
 
 end
